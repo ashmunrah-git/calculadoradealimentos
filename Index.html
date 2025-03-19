@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Ingredientes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        select, input, button {
+            margin-top: 5px;
+            padding: 8px;
+            font-size: 16px;
+        }
+        #pratos-selecionados {
+            margin-top: 20px;
+        }
+        #resultado {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f4f4f4;
+            border: 1px solid #ccc;
+            white-space: pre-wrap;
+        }
+        .prato-info {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Calculadora de Ingredientes</h1>
+    <form id="formulario">
+        <label for="pratos">Selecione um prato:</label>
+        <select id="pratos">
+            <!-- Opções serão preenchidas pelo JavaScript -->
+        </select><br><br>
+        <label for="pessoas">Número de pessoas:</label>
+        <input type="number" id="pessoas" required><br><br>
+        <button type="button" onclick="acrescentarPrato()">Acrescentar Prato</button>
+    </form>
+
+    <div id="pratos-selecionados">
+        <h2>Pratos Selecionados:</h2>
+        <div id="lista-pratos"></div>
+    </div>
+
+    <h2>Resultado:</h2>
+    <pre id="resultado"></pre>
+
+    <script>
+        let pratosData = [];
+        let pratosSelecionados = []; // Lista de pratos selecionados
+
+        // Função para carregar o CSV
+        async function carregarCSV() {
+            const response = await fetch('pratos.csv'); // Nome do arquivo CSV
+            const data = await response.text();
+            const linhas = data.split('\n').slice(1); // Ignora o cabeçalho
+
+            pratosData = linhas.map(linha => {
+                const [prato, ingrediente, quantidade] = linha.split(',');
+                return {
+                    prato: prato.trim(),
+                    ingrediente: ingrediente.trim(),
+                    quantidade: parseFloat(quantidade.trim())
+                };
+            });
+
+            // Preenche as opções do select
+            const pratosUnicos = [...new Set(pratosData.map(item => item.prato))];
+            const select = document.getElementById('pratos');
+            pratosUnicos.forEach(prato => {
+                const option = document.createElement('option');
+                option.value = prato;
+                option.textContent = prato;
+                select.appendChild(option);
+            });
+        }
+
+        // Função para acrescentar um prato à lista
+        function acrescentarPrato() {
+            const pratoSelecionado = document.getElementById('pratos').value;
+            const numPessoas = document.getElementById('pessoas').value;
+
+            if (pratoSelecionado && numPessoas > 0) {
+                // Verifica se o prato já foi adicionado
+                const pratoExistente = pratosSelecionados.find(p => p.nome === pratoSelecionado);
+                if (pratoExistente) {
+                    alert('Este prato já foi adicionado!');
+                    return;
+                }
+
+                // Adiciona o prato à lista de selecionados
+                pratosSelecionados.push({
+                    nome: pratoSelecionado,
+                    pessoas: numPessoas
+                });
+
+                atualizarListaPratos();
+                calcular();
+            } else {
+                alert('Selecione um prato e insira o número de pessoas!');
+            }
+        }
+
+        // Função para atualizar a lista de pratos selecionados
+        function atualizarListaPratos() {
+            const lista = document.getElementById('lista-pratos');
+            lista.innerHTML = ''; // Limpa a lista
+
+            pratosSelecionados.forEach(prato => {
+                const pratoInfo = document.createElement('div');
+                pratoInfo.className = 'prato-info';
+
+                // Exibe o nome do prato e o número de pessoas
+                pratoInfo.innerHTML = `<strong>${prato.nome}</strong> (${prato.pessoas} pessoas):<br>`;
+
+                // Exibe os ingredientes e quantidades por pessoa
+                pratosData.filter(item => item.prato === prato.nome).forEach(ingrediente => {
+                    pratoInfo.innerHTML += `- ${ingrediente.ingrediente}: ${ingrediente.quantidade.toFixed(2)}g por pessoa<br>`;
+                });
+
+                lista.appendChild(pratoInfo);
+            });
+        }
+
+        // Função para calcular os ingredientes
+        function calcular() {
+            const ingredientesTotais = {};
+
+            // Soma os ingredientes de todos os pratos selecionados
+            pratosSelecionados.forEach(prato => {
+                pratosData.filter(item => item.prato === prato.nome).forEach(ingrediente => {
+                    const quantidadeTotal = ingrediente.quantidade * prato.pessoas;
+                    if (ingredientesTotais[ingrediente.ingrediente]) {
+                        ingredientesTotais[ingrediente.ingrediente] += quantidadeTotal;
+                    } else {
+                        ingredientesTotais[ingrediente.ingrediente] = quantidadeTotal;
+                    }
+                });
+            });
+
+            // Exibe o resultado
+            const resultado = Object.entries(ingredientesTotais)
+                .map(([ingrediente, quantidade]) => `${ingrediente}: ${quantidade.toFixed(2)} gramas`)
+                .join('\n');
+            document.getElementById('resultado').textContent = resultado;
+        }
+
+        // Carrega o CSV ao iniciar
+        carregarCSV();
+    </script>
+</body>
+</html>
