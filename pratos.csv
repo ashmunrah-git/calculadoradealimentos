@@ -1,9 +1,37 @@
-Prato,Ingrediente,Quantidade por Pessoa (gramas)
-Arroz,Arroz,100
-Arroz,Água,200
-Feijão,Feijão,80
-Feijão,Água,300
-Purê,Batata,150
-Purê,Leite,50
-Carne,Carne,200
-Carne,Batata,100
+Prato,Ingrediente,"Quantidade por Pessoa (gramas)
+"
+Coxinha,Agua,125
+Coxinha,caldo de galinha em pó,5
+Coxinha,Manteiga,10
+Coxinha,Farinha de Trigo,60
+Coxinha,Frango desfiado,100
+Coxinha,Cebola picada,20
+Coxinha,Alho picado,5
+Coxinha,Requeijão,5
+Coxinha,Sal,2
+Coxinha,Ovo,1
+Coxinha,farinha de rosca,40
+Risole,Agua,125
+Risole,caldo de galinha em pó,5
+Risole,Manteiga,10
+Risole,Farinha de Trigo,60
+Risole,Presunto picado,30
+Risole,Queijo mussarela,30
+Risole,Ovo,1
+Risole,farinha de rosca,40
+Empada,Farinha de Trigo,60
+Empada,Manteiga,30
+Empada,Ovo,1
+Empada,Sal,2
+Empada,Frango desfiado,50
+Empada,Cebola picada,10
+Empada,Alho picado,3
+Hamburgão,Farinha de trigo,60
+Hamburgão,Leite morno,30
+Hamburgão,Açucar,5
+Hamburgão,Fermento Biologico ,5
+Hamburgão,Manteiga,10
+Hamburgão,Ovo,1
+Hamburgão,Carne Moida,80
+Hamburgão,Queijo mussarela,20
+Hamburgão,Tomate,15
