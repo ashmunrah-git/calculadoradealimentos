@@ -3,61 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Ingredientes</title>
+    <title>NutriCalc - Calculadora de Ingredientes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --verde-primario: #2E7D32;
+            --verde-secundario: #388E3C;
+            --verde-claro: #C8E6C9;
+            --verde-muito-claro: #E8F5E9;
+            --branco: #FFFFFF;
+            --cinza-claro: #F5F5F5;
+            --sombra: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        h1 {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--verde-muito-claro);
             color: #333;
+            line-height: 1.6;
         }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--verde-primario);
+            color: var(--branco);
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 0 0 10px 10px;
+            margin-bottom: 30px;
+            box-shadow: var(--sombra);
+        }
+        
+        h1 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 2.2rem;
+        }
+        
+        h2 {
+            color: var(--verde-primario);
+            border-bottom: 2px solid var(--verde-claro);
+            padding-bottom: 8px;
+            margin-top: 30px;
+        }
+        
+        .card {
+            background-color: var(--branco);
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: var(--sombra);
+        }
+        
         label {
             display: block;
-            margin-top: 10px;
+            margin-top: 15px;
+            color: var(--verde-primario);
+            font-weight: 500;
         }
-        select, input, button {
-            margin-top: 5px;
-            padding: 8px;
-            font-size: 16px;
-        }
-        #pratos-selecionados {
-            margin-top: 20px;
-        }
-        #resultado {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #f4f4f4;
-            border: 1px solid #ccc;
-            white-space: pre-wrap;
-        }
-        .prato-info {
-            margin-bottom: 10px;
-            padding: 10px;
+        
+        select, input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
             border: 1px solid #ddd;
-            background-color: #f9f9f9;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border 0.3s;
+            box-sizing: border-box;
+        }
+        
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--verde-secundario);
+            box-shadow: 0 0 0 2px var(--verde-claro);
+        }
+        
+        button {
+            background-color: var(--verde-secundario);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            margin-top: 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.3s, transform 0.2s;
+            display: inline-block;
+        }
+        
+        button:hover {
+            background-color: var(--verde-primario);
+            transform: translateY(-2px);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        #lista-pratos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .prato-info {
+            background-color: var(--verde-claro);
+            border-radius: 6px;
+            padding: 15px;
+            border-left: 4px solid var(--verde-secundario);
+        }
+        
+        .prato-info strong {
+            color: var(--verde-primario);
+            font-size: 1.1rem;
+        }
+        
+        #resultado {
+            background-color: var(--verde-claro);
+            border-radius: 6px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            line-height: 1.8;
+            border-left: 4px solid var(--verde-secundario);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: var(--verde-primario);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            #lista-pratos {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>Calculadora de Ingredientes</h1>
-    <form id="formulario">
-        <label for="pratos">Selecione um prato:</label>
-        <select id="pratos">
-            <!-- Opções serão preenchidas pelo JavaScript -->
-        </select><br><br>
-        <label for="pessoas">Número de pessoas:</label>
-        <input type="number" id="pessoas" required><br><br>
-        <button type="button" onclick="acrescentarPrato()">Acrescentar Prato</button>
-    </form>
-
-    <div id="pratos-selecionados">
-        <h2>Pratos Selecionados:</h2>
-        <div id="lista-pratos"></div>
-    </div>
-
-    <h2>Resultado:</h2>
-    <pre id="resultado"></pre>
+    <header>
+        <div class="container">
+            <h1>Calculadora de Alimentos</h1>
+            <p>Calculadora de ingredientes para preparações culinárias</p>
+        </div>
+    </header>
+    
+    <main class="container">
+        <section class="card">
+            <h2>Adicionar Prato</h2>
+            <form id="formulario">
+                <label for="pratos">Selecione um prato:</label>
+                <select id="pratos">
+                    <!-- Opções serão preenchidas pelo JavaScript -->
+                </select>
+                
+                <label for="pessoas">Número de pessoas:</label>
+                <input type="number" id="pessoas" min="1" required>
+                
+                <button type="button" onclick="acrescentarPrato()">
+                    <i class="fas fa-plus"></i> Acrescentar Prato
+                </button>
+            </form>
+        </section>
+        
+        <section class="card" id="pratos-selecionados">
+            <h2>Pratos Selecionados</h2>
+            <div id="lista-pratos"></div>
+        </section>
+        
+        <section class="card">
+            <h2>Lista de Compras</h2>
+            <p>Quantidades totais de ingredientes necessários:</p>
+            <pre id="resultado"></pre>
+        </section>
+    </main>
+    
+    <footer>
+        <p>Desenvolvido para o Curso de Nutrição - © 2025</p>
+    </footer>
 
     <script>
         let pratosData = [];
@@ -110,8 +254,11 @@
 
                 atualizarListaPratos();
                 calcular();
+                
+                // Limpa o formulário
+                document.getElementById('pessoas').value = '';
             } else {
-                alert('Selecione um prato e insira o número de pessoas!');
+                alert('Selecione um prato e insira um número válido de pessoas!');
             }
         }
 
@@ -119,6 +266,11 @@
         function atualizarListaPratos() {
             const lista = document.getElementById('lista-pratos');
             lista.innerHTML = ''; // Limpa a lista
+
+            if (pratosSelecionados.length === 0) {
+                lista.innerHTML = '<p style="color: #666; font-style: italic;">Nenhum prato selecionado ainda.</p>';
+                return;
+            }
 
             pratosSelecionados.forEach(prato => {
                 const pratoInfo = document.createElement('div');
@@ -132,8 +284,18 @@
                     pratoInfo.innerHTML += `- ${ingrediente.ingrediente}: ${ingrediente.quantidade.toFixed(2)}g por pessoa<br>`;
                 });
 
+                // Adiciona botão para remover
+                pratoInfo.innerHTML += `<button onclick="removerPrato('${prato.nome}')" style="margin-top: 10px; padding: 6px 12px; background-color: #f44336; font-size: 14px;">Remover</button>`;
+                
                 lista.appendChild(pratoInfo);
             });
+        }
+
+        // Função para remover um prato
+        function removerPrato(nomePrato) {
+            pratosSelecionados = pratosSelecionados.filter(p => p.nome !== nomePrato);
+            atualizarListaPratos();
+            calcular();
         }
 
         // Função para calcular os ingredientes
@@ -153,9 +315,14 @@
             });
 
             // Exibe o resultado
-            const resultado = Object.entries(ingredientesTotais)
-                .map(([ingrediente, quantidade]) => `${ingrediente}: ${quantidade.toFixed(2)} gramas`)
-                .join('\n');
+            let resultado = '';
+            if (Object.keys(ingredientesTotais).length === 0) {
+                resultado = "Adicione pratos para ver a lista de ingredientes necessários.";
+            } else {
+                resultado = Object.entries(ingredientesTotais)
+                    .map(([ingrediente, quantidade]) => `• ${ingrediente}: ${quantidade.toFixed(2)} gramas`)
+                    .join('\n');
+            }
             document.getElementById('resultado').textContent = resultado;
         }
 
