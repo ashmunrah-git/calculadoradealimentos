@@ -19,7 +19,7 @@
         body {
             font-family: 'Poppins', sans-serif;
             margin: 0;
-            padding: 0;
+            padding: 20px;
             background-color: var(--verde-muito-claro);
             color: #333;
             line-height: 1.6;
@@ -28,23 +28,12 @@
         .container {
             max-width: 900px;
             margin: 0 auto;
-            padding: 20px;
-        }
-        
-        header {
-            background-color: var(--verde-primario);
-            color: var(--branco);
-            padding: 20px 0;
-            text-align: center;
-            border-radius: 0 0 10px 10px;
-            margin-bottom: 30px;
-            box-shadow: var(--sombra);
         }
         
         h1 {
-            margin: 0;
-            font-weight: 600;
-            font-size: 2.2rem;
+            color: var(--verde-primario);
+            text-align: center;
+            margin-bottom: 30px;
         }
         
         h2 {
@@ -147,12 +136,8 @@
         }
         
         @media (max-width: 768px) {
-            .container {
+            body {
                 padding: 15px;
-            }
-            
-            h1 {
-                font-size: 1.8rem;
             }
             
             #lista-pratos {
@@ -162,8 +147,9 @@
     </style>
 </head>
 <body>
-    
-    <main class="container">
+    <div class="container">
+        <h1>Calculadora de Ingredientes Nutricionais</h1>
+        
         <section class="card">
             <h2>Adicionar Prato</h2>
             <form id="formulario">
@@ -176,7 +162,7 @@
                 <input type="number" id="pessoas" min="1" required>
                 
                 <button type="button" onclick="acrescentarPrato()">
-                    <i class="fas fa-plus"></i> Acrescentar Prato
+                    Acrescentar Prato
                 </button>
             </form>
         </section>
@@ -191,21 +177,66 @@
             <p>Quantidades totais de ingredientes necessários:</p>
             <pre id="resultado"></pre>
         </section>
-    </main>
-    
-    <footer>
-        <p>Desenvolvido para o Curso de Nutrição - © 2025</p>
-    </footer>
+        
+        <footer>
+            <p>Desenvolvido para o Curso de Nutrição - © 2023</p>
+        </footer>
+    </div>
 
     <script>
         let pratosData = [];
         let pratosSelecionados = []; // Lista de pratos selecionados
 
-        // Função para carregar o CSV
+        // Função para carregar o CSV (RESTAURADA)
         async function carregarCSV() {
-            const response = await fetch('pratos.csv'); // Nome do arquivo CSV
-            const data = await response.text();
-            const linhas = data.split('\n').slice(1); // Ignora o cabeçalho
+            try {
+                const response = await fetch('pratos.csv'); // Nome do arquivo CSV
+                const data = await response.text();
+                const linhas = data.split('\n').slice(1); // Ignora o cabeçalho
+
+                pratosData = linhas.map(linha => {
+                    // Verifica se a linha não está vazia
+                    if (linha.trim() === '') return null;
+                    
+                    const [prato, ingrediente, quantidade] = linha.split(',');
+                    return {
+                        prato: prato.trim(),
+                        ingrediente: ingrediente.trim(),
+                        quantidade: parseFloat(quantidade.trim())
+                    };
+                }).filter(item => item !== null); // Remove linhas vazias
+
+                // Preenche as opções do select
+                const pratosUnicos = [...new Set(pratosData.map(item => item.prato))];
+                const select = document.getElementById('pratos');
+                pratosUnicos.forEach(prato => {
+                    const option = document.createElement('option');
+                    option.value = prato;
+                    option.textContent = prato;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error("Erro ao carregar o arquivo CSV:", error);
+                alert("Erro ao carregar os dados. Verifique o console para mais detalhes.");
+                
+                // Carrega dados de exemplo em caso de erro
+                carregarDadosExemplo();
+            }
+        }
+
+        // Função para carregar dados exemplo se o CSV falhar
+        function carregarDadosExemplo() {
+            const csvData = `Prato,Ingrediente,Quantidade
+Salada Verde,Alface,50
+Salada Verde,Tomate,30
+Salada Verde,Pepino,20
+Frango Grelhado,Peito de Frango,150
+Frango Grelhado,Azeite,10
+Sopa de Legumes,Cenoura,40
+Sopa de Legumes,Batata,50
+Sopa de Legumes,Cebola,20`;
+
+            const linhas = csvData.split('\n').slice(1);
 
             pratosData = linhas.map(linha => {
                 const [prato, ingrediente, quantidade] = linha.split(',');
@@ -219,6 +250,7 @@
             // Preenche as opções do select
             const pratosUnicos = [...new Set(pratosData.map(item => item.prato))];
             const select = document.getElementById('pratos');
+            select.innerHTML = ''; // Limpa opções existentes
             pratosUnicos.forEach(prato => {
                 const option = document.createElement('option');
                 option.value = prato;
@@ -292,7 +324,7 @@
             calcular();
         }
 
-        // Função para calcular os ingredientes
+        // Função para calcular os ingredientes (em kg)
         function calcular() {
             const ingredientesTotais = {};
 
@@ -308,13 +340,16 @@
                 });
             });
 
-            // Exibe o resultado
+            // Exibe o resultado em kg
             let resultado = '';
             if (Object.keys(ingredientesTotais).length === 0) {
                 resultado = "Adicione pratos para ver a lista de ingredientes necessários.";
             } else {
                 resultado = Object.entries(ingredientesTotais)
-                    .map(([ingrediente, quantidade]) => `• ${ingrediente}: ${quantidade.toFixed(2)} gramas`)
+                    .map(([ingrediente, quantidade]) => {
+                        const quantidadeKg = (quantidade / 1000).toFixed(3);
+                        return `• ${ingrediente}: ${quantidadeKg} kg`;
+                    })
                     .join('\n');
             }
             document.getElementById('resultado').textContent = resultado;
