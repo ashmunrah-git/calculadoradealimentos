@@ -34,3 +34,48 @@ Hamburgão,Ovo,1
 Hamburgão,Carne Moida,80
 Hamburgão,Queijo mussarela,20
 Hamburgão,Tomate,15
+X-Salada,Pão de hambúrguer,60
+X-Salada,Carne Moida,80
+X-Salada,Queijo mussarela,20
+X-Salada,Alface,10
+X-Salada,Tomate,30
+X-Salada,Maionese,15
+X-Salada,Ketchup,15
+X-Salada,Mostarda,5
+X-Calabresa,Pão de hambúrguer,60
+X-Calabresa,Linguiça calabresa,80
+X-Calabresa,Queijo mussarela,20
+X-Calabresa,Alface,10
+X-Calabresa,Tomate,30
+X-Calabresa,Maionese,15
+X-Calabresa,Ketchup,15
+X-Calabresa,Mostarda,5
+X-Calabresa,Oleo ,5
+Pão na chapa,Pão Francês,60
+Pão na chapa,Margarina,5
+Pão na chapa com Requeijão,Pão Francês,60
+Pão na chapa com Requeijão,Margarina,5
+Pão na chapa com Requeijão,Requeijão,5
+Suco de laranja,Laranja,450
+Café,Agua,150
+Café,Café ,10
+Café,Açucar,10
+Café com Leite,Leite morno,100
+Café com Leite,Agua,100
+Café com Leite,Café ,10
+Café com Leite,Açucar,10
+Pastel de Frango,Massa de Pastel,40
+Pastel de Frango,Frango desfiado,60
+Pastel de Frango,Cebola picada,10
+Pastel de Frango,Tomate,0
+Pastel de Frango,Requeijão,15
+Pastel de Frango,Temperos,5
+Pastel de Frango,Sal,2
+Pastel de Frango,Oleo ,5
+Pastel de Carne,Carne Moida,60
+Pastel de Carne,Cebola picada,10
+Pastel de Carne,Tomate,10
+Pastel de Carne,Temperos,5
+Pastel de Carne,Sal,2
+Pastel de Carne,Massa de Pastel,40
+Pastel de Carne,Oleo ,5
